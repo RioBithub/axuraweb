@@ -1,0 +1,21 @@
+{
+  "name": "axuraweb",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Company profile PT Audev Axura Technology for axura.cloud",
+  "packageManager": "npm@11.9.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "preview": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "dry-run": "npm run build && wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "@fontsource-variable/manrope": "^5.0.0",
+    "@fontsource-variable/space-grotesk": "^5.0.0",
+    "wrangler": "4.152.0"
+  }
+}
