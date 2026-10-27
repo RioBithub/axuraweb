@@ -7,6 +7,12 @@
  const storageKey = 'axura-store-cart-v1';
  const $ = (selector, scope = document) => scope.querySelector(selector);
  const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+ const skipLink = $('.skip-link');
+ if (skipLink) skipLink.addEventListener('click',event=>{
+  event.preventDefault();
+  const main = $('#main');
+  if (main) { main.setAttribute('tabindex','-1'); main.focus(); }
+ });
  const money = value => 'Rp' + new Intl.NumberFormat('id-ID').format(value);
  const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
  const icon = name => `<svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#${name}"></use></svg>`;
