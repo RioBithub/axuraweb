@@ -1,0 +1,50 @@
+export const company = {
+  name: 'PT Audev Axura Technology',
+  domain: 'https://store.axura.cloud',
+  whatsapp: '6281776803344',
+  whatsappDisplay: '+62 817-7680-3344',
+  email: 'seismikas@gmail.com',
+};
+
+export const products = [
+  {
+    id: 'custom-software', category: 'software', categoryLabel: 'Software & aplikasi',
+    title: 'Custom Software & App Development', short: 'Software yang mengikuti cara Anda bekerja.',
+    description: 'Aplikasi tailor-made untuk web dan mobile, dari analisis kebutuhan, UI/UX, backend, hingga deployment.',
+    price: 10000000, icon: 'code', number: '01', tags: ['Web & mobile', 'UI/UX', 'Custom development'],
+    includes: ['Analisis kebutuhan dan ruang lingkup aplikasi', 'Perancangan antarmuka dan pengalaman pengguna', 'Pengembangan aplikasi dan backend sesuai kesepakatan', 'Deployment sesuai penawaran proyek'],
+    terms: ['Harga berubah sesuai kompleksitas proyek.', 'DP minimal 50% di awal.', 'Timeline dihitung setelah brief lengkap.', 'Tidak termasuk domain/server kecuali disepakati.'],
+    for: 'Bisnis yang membutuhkan website, aplikasi, atau sistem operasional sesuai proses kerjanya.',
+    note: 'DP minimal 50%, setelah ruang lingkup disepakati.',
+  },
+  {
+    id: 'cloud-devops', category: 'cloud', categoryLabel: 'Cloud & DevOps',
+    title: 'Cloud Infrastructure & DevOps', short: 'Fondasi yang siap untuk langkah berikutnya.',
+    description: 'Infrastruktur scalable di AWS/GCP, pipeline CI/CD, containerization, dan monitoring modern untuk aplikasi bisnis Anda.',
+    price: 12000000, icon: 'cloud', number: '02', tags: ['Cloud infrastructure', 'CI/CD', 'Monitoring'],
+    includes: ['Perencanaan infrastruktur sesuai kebutuhan', 'Konfigurasi lingkungan cloud yang disepakati', 'Penyiapan CI/CD dan containerization sesuai ruang lingkup', 'Monitoring sesuai penawaran proyek'],
+    terms: ['Harga belum termasuk lisensi cloud/tools.', 'Pembayaran 60% di awal.', 'Akses ke akun cloud diperlukan / disediakan mandiri.'],
+    for: 'Tim yang membutuhkan deployment lebih terstruktur dan fondasi infrastruktur untuk pertumbuhan aplikasi.',
+    note: 'Pembayaran 60% di awal. Biaya cloud/tools terpisah.',
+  },
+  {
+    id: 'ai-ml', category: 'ai', categoryLabel: 'AI & machine learning',
+    title: 'AI & Machine Learning Integration', short: 'Dari data, menjadi kemungkinan baru.',
+    description: 'Integrasi AI dan machine learning untuk klasifikasi, prediksi, serta automasi proses berbasis model.',
+    price: 15000000, icon: 'spark', number: '03', tags: ['AI integration', 'Machine learning', 'Automation'],
+    includes: ['Pembahasan use case dan kebutuhan data', 'Perencanaan pendekatan model sesuai ruang lingkup', 'Integrasi klasifikasi, prediksi, atau automasi yang disepakati', 'Penyerahan hasil sesuai penawaran proyek'],
+    terms: ['Harga tergantung scope dataset & model.', 'Data disediakan klien atau publik.', 'Skala produksi massal dinegosiasikan terpisah.'],
+    for: 'Bisnis yang ingin menerapkan AI pada proses tertentu dengan kebutuhan dan data yang jelas.',
+    note: 'Ruang lingkup dataset dan model menentukan harga akhir.',
+  },
+  {
+    id: 'cybersecurity', category: 'security', categoryLabel: 'Cybersecurity',
+    title: 'Cybersecurity Architecture', short: 'Keamanan dimulai dari fondasi yang tepat.',
+    description: 'Asesmen keamanan, perancangan arsitektur, hardening, pentest, dan kebijakan keamanan informasi.',
+    price: 13000000, icon: 'shield', number: '04', tags: ['Security assessment', 'Hardening', 'Architecture'],
+    includes: ['Pembahasan lingkup sistem dan izin asesmen', 'Asesmen atau pengujian sesuai ruang lingkup tertulis', 'Rekomendasi arsitektur dan penguatan keamanan', 'Penyerahan hasil sesuai penawaran proyek'],
+    terms: ['Audit tanpa tanggung jawab pihak ketiga.', 'NDA wajib bila sistem sensitif.', 'Rekomendasi bersifat implementatif & konsultatif.'],
+    for: 'Organisasi yang ingin meninjau keamanan sistem dan menyusun langkah penguatan yang relevan.',
+    note: 'Lingkup, izin pengujian, dan kebutuhan NDA disepakati dahulu.',
+  },
+];

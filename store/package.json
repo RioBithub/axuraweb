@@ -1,0 +1,12 @@
+{
+  "name": "axura-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node --check src/store.js && node --check scripts/build.mjs",
+    "deploy": "npm run build && npx wrangler deploy"
+  },
+  "engines": { "node": ">=22" }
+}
