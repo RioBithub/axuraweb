@@ -129,6 +129,9 @@
  const form = $('#brief-form');
  const review = $('#request-review');
  let requestText = '';
+ let requestPayload;
+ let pendingSubmission;
+ const secret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b=>b.toString(16).padStart(2,'0')).join('');
  function renderCheckout() {
   if (!$('#checkout-content')) return;
   const items = selected();
@@ -146,7 +149,7 @@
   const fields = [['Nama', values.name], ['Organisasi', values.company || '—'], ['Email', values.email], ['WhatsApp', values.phone], ['Kebutuhan', values.brief], ['Target mulai', values.timeline], ['Referensi', values.reference || '—']];
   $('#review-data').innerHTML = '<dl>' + fields.map(([key, value]) => `<dt>${key}</dt><dd>${esc(value)}</dd>`).join('') + '</dl>';
   requestText = ['Halo tim Axura, saya ingin mengajukan permintaan layanan.', '', ...fields.map(([key, value]) => key + ': ' + value), '', 'Layanan yang dipilih:', ...items.map(p => '- ' + p.title + ' (mulai ' + money(p.price) + ')'), '', 'Total estimasi harga awal: ' + money(total), 'Harga final, pajak, ruang lingkup, jadwal, dan metode pembayaran menunggu penawaran tertulis.', 'Ini merupakan permintaan layanan, bukan bukti pembayaran.', '', 'Dari: ' + config.company.domain].join('\n');
-  $('#send-request').href = 'https://wa.me/' + config.company.whatsapp + '?text=' + encodeURIComponent(requestText);
+  requestPayload = {...values,consent:values.consent === 'on',service_ids:items.map(p=>p.id)};
   form.hidden = true;
   review.hidden = false;
   $('#step-brief').classList.remove('active');
@@ -154,6 +157,31 @@
   if (scroll) { review.scrollIntoView({ behavior: 'smooth', block: 'start' }); $('#review-title').setAttribute('tabindex', '-1'); $('#review-title').focus({ preventScroll: true }); }
  }
  if (form) {
+  $('#send-request').addEventListener('click',async()=>{
+   const button = $('#send-request');
+   if (!requestPayload || button.disabled) return;
+   const fingerprint = JSON.stringify(requestPayload);
+   if (!pendingSubmission || pendingSubmission.fingerprint !== fingerprint) pendingSubmission={fingerprint,request_key:secret(),access_token:secret()};
+   button.disabled = true;
+   button.textContent = 'Menyimpan pesanan…';
+   $('#order-error').hidden = true;
+   try {
+    const response = await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...requestPayload,request_key:pendingSubmission.request_key,access_token:pendingSubmission.access_token})});
+    let result;
+    try { result = await response.json(); } catch { throw new Error('Pemesanan belum tersedia. Pesanan belum tersimpan; silakan coba kembali nanti.'); }
+    if (!response.ok || !result.order?.id) throw new Error(result.error || 'Pesanan belum tersimpan. Silakan coba lagi.');
+    const path = '/pembayaran/?order=' + encodeURIComponent(result.order.id) + '#akses=' + pendingSubmission.access_token;
+    try { sessionStorage.setItem('axura-last-order',path); } catch { /* Private receipt remains in the URL. */ }
+    cartIds = [];
+    try { localStorage.setItem(storageKey,'[]'); } catch { /* No payment has been collected. */ }
+    location.assign(path);
+   } catch (error) {
+    $('#order-error').textContent = error.message || 'Koneksi terputus. Silakan coba lagi; permintaan yang sama tidak membuat pesanan ganda.';
+    $('#order-error').hidden = false;
+    button.disabled = false;
+    button.innerHTML = 'Buat pesanan & lanjut ' + icon('arrow');
+   }
+  });
   form.addEventListener('submit', event => { event.preventDefault(); showReview(); });
   $('#edit-brief').addEventListener('click', () => {
    review.hidden = true;
@@ -177,5 +205,40 @@
    toast('Ringkasan permintaan siap diunduh.');
   });
  }
+ async function loadReceipt() {
+  const page = $('#payment-page');
+  if (!page) return;
+  const id = new URLSearchParams(location.search).get('order');
+  const token = new URLSearchParams(location.hash.slice(1)).get('akses');
+  if (!id || !token) {
+   $('#payment-loading').hidden = true;
+   $('#payment-empty').hidden = false;
+   try { const last = sessionStorage.getItem('axura-last-order'); if (last?.startsWith('/pembayaran/?order=')) { $('#last-order').href=last;$('#last-order').hidden=false; } } catch { /* No saved private link. */ }
+   return;
+  }
+  try {
+   const response = await fetch('/api/orders/' + encodeURIComponent(id),{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+   const result = await response.json();
+   if (!response.ok || !result.order) throw new Error(result.error || 'Pesanan belum dapat dimuat. Silakan coba lagi.');
+   const order = result.order;
+   $('#receipt-id').textContent = order.id;
+   $('#receipt-date').textContent = new Intl.DateTimeFormat('id-ID',{dateStyle:'long',timeStyle:'short',timeZone:'Asia/Jakarta'}).format(new Date(order.created_at)) + ' WIB';
+   $('#receipt-name').textContent = order.customer.name;
+   $('#receipt-items').innerHTML = order.items.map(item=>`<div class="summary-item"><span>${icon('layers')}</span><div><h3>${esc(item.title)}</h3><p>${money(item.unit_price_idr)}</p></div></div>`).join('');
+   $('#receipt-total').textContent = money(order.total_idr);
+   $('#payment-loading').hidden = true;
+   $('#payment-receipt').hidden = false;
+   $('#copy-order-link').addEventListener('click',async()=>{try {await navigator.clipboard.writeText(location.href);toast('Tautan pribadi pesanan disalin.');}catch{toast('Salin tautan dari kolom alamat browser.');}});
+   $('#download-order').addEventListener('click',()=>{
+    const text=['AXURA STORE — PERMINTAAN LAYANAN',order.id,'Status: Menunggu peninjauan','Pembayaran: Belum tersedia','',...order.items.map(item=>item.title+' — mulai '+money(item.unit_price_idr)),'','Total estimasi awal: '+money(order.total_idr),'Harga final mengikuti penawaran tertulis. Belum ada dana ditarik.','','Tautan pribadi: '+location.href].join('\n');
+    const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download=order.id+'.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+   });
+  } catch (error) {
+   $('#payment-loading').textContent = error.message || 'Pesanan belum dapat dimuat. Silakan muat ulang halaman.';
+   $('#retry-receipt').hidden = false;
+  }
+ }
+ if ($('#retry-receipt')) $('#retry-receipt').addEventListener('click',()=>location.reload());
  renderCart();
+ loadReceipt();
 })();
