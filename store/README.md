@@ -37,7 +37,7 @@ Cloudflare menangani rekaman DNS untuk custom domain Workers. Konfigurasi ini ti
 
 ## Pembayaran berikutnya
 
-Alur saat ini menyimpan **permintaan penawaran** dengan status `awaiting_review`, mata uang `IDR`, dan status pembayaran `not_available`. Halaman `/pembayaran/` berada pada domain toko sendiri. Tidak ada tombol checkout ke situs lain dan tidak ada penarikan dana. Untuk mengaktifkan Midtrans kelak, tambahkan backend yang membuat ID pesanan dan jumlah tagihan dari server, menyimpan pesanan secara durable, membuat Snap token dari server, memverifikasi webhook dan signature, serta menentukan status pembayaran dari notifikasi terverifikasi. Simpan Server Key sebagai Worker Secret. Jangan menaruh kunci atau menganggap redirect sukses sebagai bukti pembayaran di frontend.
+Alur saat ini menyimpan **permintaan penawaran** dengan status `awaiting_review`, mata uang `IDR`, dan status pembayaran `not_available`. Halaman `/pembayaran/` berada pada domain toko sendiri. Tidak ada penarikan dana otomatis. Untuk transaksi sementara, pengunjung dapat menghubungi WhatsApp 081285522624 melalui tautan di bagian atas situs serta halaman pemesanan dan pembayaran. Untuk mengaktifkan Midtrans kelak, tambahkan backend yang membuat ID pesanan dan jumlah tagihan dari server, menyimpan pesanan secara durable, membuat Snap token dari server, memverifikasi webhook dan signature, serta menentukan status pembayaran dari notifikasi terverifikasi. Simpan Server Key sebagai Worker Secret. Jangan menaruh kunci atau menganggap redirect sukses sebagai bukti pembayaran di frontend.
 
 ## Aset
 

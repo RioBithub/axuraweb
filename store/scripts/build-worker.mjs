@@ -18,7 +18,7 @@ async function walk(path) {
 }
 await walk(dist);
 const handler = await readFile(resolve(root,'worker/index.js'),'utf8');
-const output = handler + '\nexport default createWorker(' + JSON.stringify(products) + ',' + JSON.stringify(assets) + ',"2026-10-28.2");\n';
+const output = handler + '\nexport default createWorker(' + JSON.stringify(products) + ',' + JSON.stringify(assets) + ',"2026-10-28.3");\n';
 await mkdir(resolve(dist,'server'),{recursive:true});
 await writeFile(resolve(dist,'server/index.js'),output);
 try {

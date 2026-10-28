@@ -3,6 +3,8 @@ export const company = {
   domain: 'https://store.axura.cloud',
   whatsapp: '6281776803344',
   whatsappDisplay: '+62 817-7680-3344',
+  transactionWhatsapp: '6281285522624',
+  transactionWhatsappDisplay: '081285522624',
   email: 'seismikas@gmail.com',
 };
 
